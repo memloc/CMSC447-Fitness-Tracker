@@ -6,7 +6,6 @@
 		"setup": "run-s setup:install-client setup:install-server",
 		"setup:install-client": "npm --prefix ./client install",
 		"setup:install-server": "npm --prefix ./server install",
-		"test": "echo \"hello world!\"",
 		"dev:server": "node --env-file=./server/config.env ./server/server.js",
 		"dev:client": "npm --prefix ./client run dev",
 		"dev:watch": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
