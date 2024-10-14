@@ -1,12 +1,18 @@
-import { Outlet } from 'react-router-dom'
-import Navbar from './components/Navbar'
+import React from 'react';
+import Calendar from './Calendar';
+import './App.css';
 
-const App = () => {
-    return (
-        <div className="w-full p-6">
-            <Navbar />
-            <Outlet />
-        </div>
-    )
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>Fitness Tracker</h1>
+      </header>
+      <main>
+        <Calendar />
+      </main>
+    </div>
+  );
 }
-export default App
+
+export default App;
