@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 const Workout = ({ workout, onSave, onDelete }) => {
     const [sets, setSets] = useState(workout.sets || [])
     const [name, setName] = useState(workout.title)
+	const [isNew, setIsNew] = useState(true)
 
     const addSet = () => {
         setSets([...sets, { weight: '', reps: '' }])
@@ -22,6 +23,10 @@ const Workout = ({ workout, onSave, onDelete }) => {
     const handleSave = () => {
         onSave({ ...workout, title: name, sets })
     }
+
+	const handleDelete = () => {
+		onDelete({ ...workout, title: name, sets })
+	}
 
     return (
         <div>
@@ -75,7 +80,7 @@ const Workout = ({ workout, onSave, onDelete }) => {
             <button
                 className="bg-blue-800 text-white font-bold py-1 px-2 rounded \
 				ml-1 mr-1"
-                onClick={() => onDelete(workout.id)}
+                onClick={handleDelete}
             >
                 Delete Workout
             </button>

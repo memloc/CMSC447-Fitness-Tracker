@@ -74,7 +74,6 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const query = { _id: new ObjectId(req.params.id) }
-
         const collection = db.collection('workout_events')
         let result = await collection.deleteOne(query)
 
