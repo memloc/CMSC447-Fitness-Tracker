@@ -49,12 +49,36 @@ const Workout = ({ workout, onSave, onDelete }) => {
                         }
                         placeholder="Reps"
                     />
-                    <button onClick={() => removeSet(index)}>Remove Set</button>
+                    <button
+                        className="bg-blue-800 text-white font-bold py-1 px-2 \
+                        rounded m-1"
+                        onClick={() => removeSet(index)}
+                    >
+                        Remove Set
+                    </button>
                 </div>
             ))}
-            <button onClick={addSet}>Add Set</button>
-            <button onClick={handleSave}>Save Workout</button>
-            <button onClick={() => onDelete(workout.id)}>Delete Workout</button>
+            <button
+                className="bg-blue-800 text-white font-bold py-1 px-2 rounded \
+				ml-1 mr-1"
+                onClick={addSet}
+            >
+                Add Set
+            </button>
+            <button
+                className="bg-blue-800 text-white font-bold py-1 px-2 rounded \
+				ml-1 mr-1"
+                onClick={handleSave}
+            >
+                Save Workout
+            </button>
+            <button
+                className="bg-blue-800 text-white font-bold py-1 px-2 rounded \
+				ml-1 mr-1"
+                onClick={() => onDelete(workout.id)}
+            >
+                Delete Workout
+            </button>
         </div>
     )
 }

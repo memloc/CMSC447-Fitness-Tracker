@@ -1,5 +1,6 @@
 import React from 'react'
-import Calendar from './Calendar'
+import { Outlet } from 'react-router-dom'
+import Calendar from './components/Calendar'
 import './App.css'
 
 function App() {
@@ -9,7 +10,7 @@ function App() {
                 <h1>Fitness Tracker</h1>
             </header>
             <main>
-                <Calendar />
+                <Outlet />
             </main>
         </div>
     )

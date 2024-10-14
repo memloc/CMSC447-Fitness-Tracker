@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, getEffect, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
@@ -9,6 +10,24 @@ const localizer = momentLocalizer(moment)
 const MyCalendar = () => {
     const [events, setEvents] = useState([])
     const [selectedWorkout, setSelectedWorkout] = useState(null)
+
+    // Fetches the WorkoutEvents from the database.
+    useEffect(() => {
+        async function getWorkoutEvents() {
+            const response = await fetch(
+                `http://localhost:5050/workout_events/`
+            )
+            if (!response.ok) {
+                const message = `An error occurred: ${response.statusText}`
+                console.error(message)
+                return
+            }
+            const workouts = await response.json()
+            setEvents(workouts)
+        }
+        getWorkoutEvents()
+        return
+    }, [events.length])
 
     const handleSelect = ({ start, end }) => {
         const title = window.prompt('Enter a title for your workout:')
@@ -38,6 +57,9 @@ const MyCalendar = () => {
     }
 
     const handleDeleteWorkout = (id) => {
+        fetch(`https://localhost:5050/workout_events/${id}`, {
+            method: 'DELETE',
+        })
         const newEvents = events.filter((event) => event.id !== id)
         setEvents(newEvents)
         setSelectedWorkout(null)
