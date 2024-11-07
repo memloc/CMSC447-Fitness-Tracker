@@ -173,8 +173,8 @@ const MyCalendar = () => {
             <Calendar
                 localizer={localizer}
                 events={events}
-                startAccessor="start"
-                endAccessor="end"
+                startAccessor={(event) => { return new Date(event.start) } }
+				endAccessor={(event) => { return new Date(event.end) } }
                 selectable
                 onSelectSlot={handleEventCreate}
                 onSelectEvent={handleEventClick}
