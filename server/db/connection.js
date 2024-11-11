@@ -21,6 +21,6 @@ try {
     console.error(err)
 }
 
-let db = client.db('FitnessTrackerV0')
+let db = client.db('FitnessTrackerV1')
 
 export default db
