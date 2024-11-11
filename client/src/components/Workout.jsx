@@ -1,31 +1,63 @@
 import React, { useState } from 'react'
 
 const Workout = ({ workout, onSave, onDelete }) => {
-    const [sets, setSets] = useState(workout.sets || [])
+	const [exercises, setExercises] = useState(workout.exercises || [])
     const [name, setName] = useState(workout.title)
     const [isNew, setIsNew] = useState(true)
 
-    const addSet = () => {
-        setSets([...sets, { weight: '', reps: '' }])
-    }
 
-    const updateSet = (index, field, value) => {
-        const newSets = [...sets]
-        newSets[index][field] = value
-        setSets(newSets)
-    }
+	const addExercise = () => {
+		setExercises([...exercises, { name: '', sets: [] }])
+	}
 
-    const removeSet = (index) => {
-        const newSets = sets.filter((_, i) => i !== index)
-        setSets(newSets)
-    }
+	const updateExercise = (index, field, value) => {
+		// Copy old exercises
+		const newExercises = [...exercises]
+		newExercises[index][field] = value;
+		setExercises(newExercises)
+	}
+
+
+	const addExerciseSet = (index) => {
+		// Copy old exercises
+		const newExercises = [...exercises]
+
+		// Create a new exercise 'set'
+		const newSet = { weight: '', reps: '' }
+
+		// Add it to the exercise index 
+		newExercises[index].sets = [...newExercises[index].sets, newSet]
+
+		setExercises(newExercises)
+	}
+
+	const updateExerciseSet = (exerciseIndex, setIndex, field, value) => {
+		// Copy old exercises
+		const newExercises = [...exercises]
+
+		newExercises[exerciseIndex].sets[setIndex] = {
+			...newExercises[exerciseIndex].sets[setIndex], [field]: value,
+		}
+
+		setExercises(newExercises)
+	}
+
+	const removeExerciseSet = (exerciseIndex, setIndex) => {
+		// Copy old exercises
+		const newExercises = [...exercises]
+
+		newExercises[exerciseIndex].sets =
+			newExercises[exerciseIndex].sets.filter((_, i) => i !== setIndex)
+
+		setExercises(newExercises)
+	}
 
     const handleSave = () => {
-        onSave({ ...workout, title: name, sets })
+        onSave({ ...workout, title: name, exercises })
     }
 
     const handleDelete = () => {
-        onDelete({ ...workout, title: name, sets })
+        onDelete({ ...workout, title: name, exercises })
     }
 
     return (
@@ -36,39 +68,67 @@ const Workout = ({ workout, onSave, onDelete }) => {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Workout Name"
             />
-            {sets.map((set, index) => (
-                <div key={index}>
+
+
+			{exercises.map((exercise, exerciseIndex) => (
+                <div key={exerciseIndex}>
                     <input
-                        type="number"
-                        value={set.weight}
+						className="border mt-2 mb-2"
+                        type="text"
+                        value={exercise.name}
                         onChange={(e) =>
-                            updateSet(index, 'weight', e.target.value)
+                            updateExercise(exerciseIndex, 'name', e.target.value)
                         }
-                        placeholder="Weight"
+                        placeholder="Exercise Name"
                     />
-                    <input
-                        type="number"
-                        value={set.reps}
-                        onChange={(e) =>
-                            updateSet(index, 'reps', e.target.value)
-                        }
-                        placeholder="Reps"
-                    />
-                    <button
-                        className="bg-blue-800 text-white font-bold py-1 px-2 \
-                        rounded m-1"
-                        onClick={() => removeSet(index)}
-                    >
-                        Remove Set
-                    </button>
-                </div>
-            ))}
+					<button
+						className="bg-blue-800 text-white font-bold pl-2 pr-2 \
+                        rounded ml-2"
+						onClick={ () => addExerciseSet(exerciseIndex) }
+					>
+					+
+					</button>
+
+					{exercise.sets.map((set, setIndex) => (
+						<div key={setIndex}>
+							<input
+								className="border mt-2 mb-2"
+								type="number"
+								value={set.reps}
+								onChange={(e) =>
+									updateExerciseSet(exerciseIndex, setIndex, 'reps', e.target.value)
+								}
+								placeholder=""
+							/>
+							<input
+								className="border mt-2 mb-2"
+								type="number"
+								value={set.weight}
+								onChange={(e) =>
+									updateExerciseSet(exerciseIndex, setIndex, 'weight', e.target.value)
+								}
+								placeholder=""
+							/>
+							<button
+								className="bg-red-600 text-white font-bold rounded pl-2 pr-2 ml-2"
+								onClick={() => removeExerciseSet(exerciseIndex, setIndex) }
+							>
+							-
+							</button>
+
+						</div>
+
+					))}
+
+				</div>
+			))}
+
             <button
                 className="bg-blue-800 text-white font-bold py-1 px-2 rounded \
 				ml-1 mr-1"
-                onClick={addSet}
+                onClick={addExercise}
             >
-                Add Set
+                Add Exercise
             </button>
             <button
                 className="bg-blue-800 text-white font-bold py-1 px-2 rounded \
