@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
+
+import Header from './Header'
 import Workout from './Workout'
 
 const localizer = momentLocalizer(moment)
@@ -173,7 +175,11 @@ const MyCalendar = () => {
     }
 
     return (
-        <div className = "container grid grid-cols-1 lg:grid-cols-5 gap-4 p-4">
+		<div>
+			<header>
+				<Header/>
+			</header>
+        <div className = "grid grid-cols-1 lg:grid-cols-5 gap-4 p-4">
             <Calendar
 				className="lg:col-span-3 h-[400px] lg:h-[500px]"
                 localizer={localizer}
@@ -193,6 +199,7 @@ const MyCalendar = () => {
 					/>
 			)}
         </div>
+		</div>
     )
 }
 

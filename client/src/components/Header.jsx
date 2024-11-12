@@ -19,7 +19,7 @@ const Header = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="custom-toggler" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <LinkContainer to="/calender">
+            <LinkContainer to="/calendar">
               <Nav.Link className="nav-link-custom">Calendar</Nav.Link>
             </LinkContainer>
             <LinkContainer to="/login">

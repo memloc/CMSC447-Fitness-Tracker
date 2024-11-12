@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import './Homepage.css';
+import './HomePage.css';
 import Header from './Header';
 import fitnessTrackerImage from './fitness_tracker.png';
 

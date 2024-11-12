@@ -4,23 +4,11 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import App from './App'
 import Workout from './components/Workout'
 import Calendar from './components/Calendar'
+import LoginPage from './components/LoginPage'
 import './index.css'
-
-const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <App />,
-        children: [
-            {
-                path: '/',
-                element: <Calendar />,
-            },
-        ],
-    },
-])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <App />
+		<App />
     </React.StrictMode>
 )
