@@ -40,7 +40,11 @@ const MyCalendar = () => {
     /* handleEventCreateCancel() ... // Delete the blank workout from db */
 
     const handleEventCreate = ({ start, end }) => {
-        const title = window.prompt('Enter a title for your workout:')
+        // const title = window.prompt('Enter a title for your workout:')
+
+		// For now just give blank titles for workouts and use the date instead
+		const title = "Default"
+
         if (title) {
             const newWorkout = {
                 id: events.length,
@@ -169,8 +173,9 @@ const MyCalendar = () => {
     }
 
     return (
-        <div style={{ height: '500px' }}>
+        <div className = "container grid grid-cols-1 lg:grid-cols-5 gap-4 p-4">
             <Calendar
+				className="lg:col-span-3 h-[400px] lg:h-[500px]"
                 localizer={localizer}
                 events={events}
                 startAccessor={(event) => { return new Date(event.start) } }
@@ -179,13 +184,14 @@ const MyCalendar = () => {
                 onSelectSlot={handleEventCreate}
                 onSelectEvent={handleEventClick}
             />
-            {selectedWorkout && (
-                <Workout
-                    workout={selectedWorkout}
-                    onSave={handleSaveWorkout}
-                    onDelete={handleDeleteWorkout}
-                />
-            )}
+			{selectedWorkout && (
+				<Workout
+					className=""
+				workout={selectedWorkout}
+				onSave={handleSaveWorkout}
+				onDelete={handleDeleteWorkout}
+					/>
+			)}
         </div>
     )
 }

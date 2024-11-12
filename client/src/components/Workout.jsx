@@ -52,6 +52,12 @@ const Workout = ({ workout, onSave, onDelete }) => {
 		setExercises(newExercises)
 	}
 
+	const removeExercise = (exerciseIndex) => {
+		// Copy old exercises
+		const newExercises = exercises.filter((_, i) => i !== exerciseIndex)
+		setExercises(newExercises)
+	}
+
     const handleSave = () => {
         onSave({ ...workout, title: name, exercises })
     }
@@ -61,19 +67,39 @@ const Workout = ({ workout, onSave, onDelete }) => {
     }
 
     return (
-        <div>
+        <div className="flex-1 lg:col-span-2 lg:ml-4 border rounded shadow">
             <input
+				className="font-bold italic text-xl text-center mt-4 mb-1"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Workout Name"
             />
 
-
 			{exercises.map((exercise, exerciseIndex) => (
-                <div key={exerciseIndex}>
+                <div key={exerciseIndex}
+					 className="justify-center items-center border shadow bg-gray-100 m-2"
+				>
+					
+					<div className="relative">
+						<button
+							className="absolute top-1 right-1 flex justify-center
+                            items-center bg-gray-200 text-white p-4 ml-2
+                            rounded-full w-8 h-8 transition-all duration-500
+                            text-opacity-0 hover:text-opacity-100
+                            hover:bg-red-600 hover:w-28 hover:h-6 
+                            hover:text-white hover:opacity-100"
+						onClick={() => removeExercise(exerciseIndex)}
+						>
+							<span className="
+                                ">
+								Delete 
+							</span>
+					</button>
+					</div>
+
                     <input
-						className="border mt-2 mb-2"
+						className="items-center border mt-2 mb-2 w-[55%]"
                         type="text"
                         value={exercise.name}
                         onChange={(e) =>
@@ -89,61 +115,66 @@ const Workout = ({ workout, onSave, onDelete }) => {
 					+
 					</button>
 
+					<div class="border-b w-5/6 mx-auto border-gray-300 mb-2"></div> 
 					{exercise.sets.map((set, setIndex) => (
 						<div key={setIndex}>
 							<input
-								className="border mt-2 mb-2"
+								className="border rounded w-1/5 text-center shadow mt-2 mb-2 ml-2 mr-2
+                                w-[30%]"
 								type="number"
 								value={set.reps}
 								onChange={(e) =>
 									updateExerciseSet(exerciseIndex, setIndex, 'reps', e.target.value)
 								}
-								placeholder=""
+								placeholder="reps"
 							/>
+							x
 							<input
-								className="border mt-2 mb-2"
+								className="border rounded w-1/5 text-center shadow mt-2 mb-2 ml-2 mr-2
+                                w-[30%]"
 								type="number"
 								value={set.weight}
 								onChange={(e) =>
 									updateExerciseSet(exerciseIndex, setIndex, 'weight', e.target.value)
 								}
-								placeholder=""
+								placeholder="weight"
 							/>
 							<button
-								className="bg-red-600 text-white font-bold rounded pl-2 pr-2 ml-2"
+								className="bg-gray-300 text-white font-bold rounded pl-2 pr-2 ml-2
+                                transition-colors duration-300 hover:bg-red-400 transition-colors"
 								onClick={() => removeExerciseSet(exerciseIndex, setIndex) }
 							>
 							-
 							</button>
-
 						</div>
-
 					))}
 
 				</div>
 			))}
 
-            <button
-                className="bg-blue-800 text-white font-bold py-1 px-2 rounded \
+			<div className="mt-8">
+				<button
+					className="bg-blue-800 text-white font-bold py-1 px-2 rounded \
 				ml-1 mr-1"
-                onClick={addExercise}
-            >
-                Add Exercise
-            </button>
-            <button
-                className="bg-blue-800 text-white font-bold py-1 px-2 rounded \
+					onClick={addExercise}
+				>
+					Add Exercise
+				</button>
+				<button
+					className="bg-blue-800 text-white font-bold py-1 px-2 rounded \
 				ml-1 mr-1"
-                onClick={handleSave}
-            >
-                Save Workout
-            </button>
-            <button
-                className="bg-blue-800 text-white font-bold py-1 px-2 rounded \
+					onClick={handleSave}
+				>
+					Save Workout
+				</button>
+				<button
+					className="bg-blue-800 text-white font-bold py-1 px-2 rounded \
 				ml-1 mr-1"
-                onClick={handleDelete}
-            >
-                Delete Workout
-            </button>
+					onClick={handleDelete}
+				>
+					Delete Workout
+				</button>
+			</div>
         </div>
     )
 }
