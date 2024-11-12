@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
             title: req.body.title,
             start: req.body.start,
             end: req.body.end,
-            sets: req.body.sets,
+            exercises: req.body.exercises,
         }
         let collection = await db.collection('workout_events')
         let result = await collection.insertOne(newDocument)
@@ -57,7 +57,7 @@ router.patch('/:id', async (req, res) => {
                 title: req.body.title,
                 start: req.body.start,
                 end: req.body.end,
-                sets: req.body.sets,
+                exercises: req.body.exercises,
             },
         }
 
