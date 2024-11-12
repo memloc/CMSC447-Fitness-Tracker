@@ -104,18 +104,14 @@ const Workout = ({ workout, onSave, onDelete }) => {
 							className="flex top-1 right-1 flex justify-center
                             items-center bg-gray-200 text-white p-3 ml-2
                             rounded-full w-6 h-6 transition-all duration-500
-                            text-opacity-0 hover:text-opacity-100
                             hover:bg-red-600 hover:w-28 hover:h-6 
                             hover:text-white hover:opacity-100"
-						onClick={() => removeExercise(exerciseIndex)}
+							onClick={() => removeExercise(exerciseIndex)}
 						>
-							<span className="text-opacity-0
-                                  group-hover:text-opacity-100 transition-all
-                                  duration-500
-                                ">
+							<div className="opacity-[01%] transition-opacity hover:opacity-100">
 								Delete 
-							</span>
-					</button>
+							</div>
+						</button>
 					</div>
 
 					<div class="border-b w-5/6 mx-auto border-gray-300 mb-2"></div> 
