@@ -11,6 +11,7 @@ const localizer = momentLocalizer(moment)
 
 const MyCalendar = () => {
     const [events, setEvents] = useState([])
+	const [isWorkoutSelected, setIsWorkoutSelected] = useState(false)
     const [selectedWorkout, setSelectedWorkout] = useState(null)
     const navigate = useNavigate()
 
@@ -41,7 +42,7 @@ const MyCalendar = () => {
     /* TODO: Maybe cancel button on workout event create? */
     /* handleEventCreateCancel() ... // Delete the blank workout from db */
 
-    const handleEventCreate = ({ start, end }) => {
+    async function handleEventCreate({ start, end }) {
         // const title = window.prompt('Enter a title for your workout:')
 
 		// For now just give blank titles for workouts and use the date instead
@@ -60,13 +61,12 @@ const MyCalendar = () => {
             // Must also post the blank workout being created to the DB
             // to fix issue of disappearing events during creation
             handleSaveWorkout(newWorkout)
-
+			await new Promise(r => setTimeout(r, 50));
             setEvents([...events, newWorkout])
-            setSelectedWorkout(newWorkout)
         }
     }
 
-    const handleEventClick = (event) => {
+    async function handleEventClick(event) {
         /* TODO: Remove console.log for production builds */
         console.log(
             `Clicked existing workout`,
@@ -75,7 +75,21 @@ const MyCalendar = () => {
             `${JSON.stringify(event)}`
         )
 
-        setSelectedWorkout(event)
+
+		// This is the only thing that I've found fixes the issue with deselecting
+		// and reselecting workouts
+		if (selectedWorkout === null)
+		{
+			setSelectedWorkout(event)
+			setIsWorkoutSelected(true)
+		}
+		else if (selectedWorkout !== event)
+		{
+			setIsWorkoutSelected(false)
+			await new Promise(r => setTimeout(r, 100));
+			setSelectedWorkout(event)
+			setIsWorkoutSelected(true)
+		}
     }
 
     async function handleSaveWorkout(updatedWorkout) {
@@ -137,8 +151,9 @@ const MyCalendar = () => {
             )
             setEvents(newEvents)
             setSelectedWorkout(null)
-            navigate('/')
+            // navigate('/')
         }
+        setIsWorkoutSelected(false)
     }
 
     async function handleDeleteWorkout(workout) {
@@ -170,8 +185,9 @@ const MyCalendar = () => {
             const newEvents = events.filter((event) => event.id !== workout.id)
             setEvents(newEvents)
             setSelectedWorkout(null)
-            navigate('/')
+            // navigate('/')
         }
+        setIsWorkoutSelected(false)
     }
 
     return (
@@ -190,13 +206,13 @@ const MyCalendar = () => {
                 onSelectSlot={handleEventCreate}
                 onSelectEvent={handleEventClick}
             />
-			{selectedWorkout && (
+			{ (isWorkoutSelected === true) && (
 				<Workout
 					className=""
-				workout={selectedWorkout}
-				onSave={handleSaveWorkout}
-				onDelete={handleDeleteWorkout}
-					/>
+					workout={selectedWorkout}
+					onSave={handleSaveWorkout}
+					onDelete={handleDeleteWorkout}
+				/>
 			)}
         </div>
 		</div>
