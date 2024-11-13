@@ -4,10 +4,12 @@ const Workout = ({ workout, onSave, onDelete }) => {
 	const [exercises, setExercises] = useState(workout.exercises || [])
     const [name, setName] = useState(workout.title)
     const [isNew, setIsNew] = useState(true)
+	const [isPopupOpen, setIsPopupOpen] = useState(false)
 
 
-	const addExercise = () => {
-		setExercises([...exercises, { name: '', sets: [] }])
+	const addExercise = (type) => {
+		setExercises([...exercises, { name: '', type: type, sets: [] }])
+		setIsPopupOpen(false)
 	}
 
 	const updateExercise = (index, field, value) => {
@@ -22,11 +24,21 @@ const Workout = ({ workout, onSave, onDelete }) => {
 		// Copy old exercises
 		const newExercises = [...exercises]
 
-		// Create a new exercise 'set'
-		const newSet = { weight: '', reps: '' }
+		console.log(newExercises[index].type)
+		if (newExercises[index].type == 'weighted')
+		{
+			// Create a new exercise 'set'
+			const newSet = { weight: '', reps: '' }
+			// Add it to the exercise index 
+			newExercises[index].sets = [...newExercises[index].sets, newSet]
+		}
+		else if (newExercises[index]['type'] == 'timed')
+		{
+			const newSet = { intensity: '', time: '' }
+			// Add it to the exercise index 
+			newExercises[index].sets = [...newExercises[index].sets, newSet]
+		}
 
-		// Add it to the exercise index 
-		newExercises[index].sets = [...newExercises[index].sets, newSet]
 
 		setExercises(newExercises)
 	}
@@ -80,17 +92,14 @@ const Workout = ({ workout, onSave, onDelete }) => {
                 <div key={exerciseIndex}
 					 className="flex flex-wrap justify-center items-center border shadow bg-gray-100 m-2"
 				>
-					
-
-                    <input
-						className="items-center border mt-2 mb-2 w-[55%]"
-                        type="text"
-                        value={exercise.name}
-                        onChange={(e) =>
-                            updateExercise(exerciseIndex, 'name', e.target.value)
-                        }
-                        placeholder="Exercise Name"
-                    />
+					<input className="items-center border mt-2 mb-2 w-[55%]"
+						   type="text"
+						   value={exercise.name}
+						   onChange={(e) =>
+							   updateExercise(exerciseIndex, 'name', e.target.value)
+						   }
+						   placeholder="Exercise Name"
+					/>
 					<button
 						className="bg-blue-800 text-white font-bold pl-2 pr-2 \
                         rounded ml-2"
@@ -115,10 +124,9 @@ const Workout = ({ workout, onSave, onDelete }) => {
 					</div>
 
 					<div class="border-b w-5/6 mx-auto border-gray-300 mb-2"></div> 
-					{exercise.sets.map((set, setIndex) => (
-						<div key={setIndex}
-							 className="flex justify-center items-center"
-						>
+
+					{ exercise.type === 'weighted' && exercise.sets.map((set, setIndex) => (
+						<div key={setIndex} className="flex justify-center items-center">
 							<input
 								className="border rounded w-1/5 text-center shadow mt-2 mb-2 ml-2 mr-2
                                 w-[30%]"
@@ -149,15 +157,78 @@ const Workout = ({ workout, onSave, onDelete }) => {
 							</button>
 						</div>
 					))}
+					{ exercise.type === 'timed' && exercise.sets.map((set, setIndex) => (
+						<div key={setIndex} className="flex justify-center items-center">
+							<select
+								className="border rounded w-1/5 text-center shadow mt-2 mb-2 ml-2 mr-2
+                                w-[30%]"
+								value={set.intensity}
+								onChange={(e) =>
+									updateExerciseSet(exerciseIndex, setIndex, 'intensity', e.target.value)
+								}
+								placeholder="Intensity"
+							>
+								<option value="Low">Low</option>
+								<option value="Medium">Medium</option>
+								<option value="High">High</option>
+							</select>
+							<input
+								className="border rounded w-1/5 text-center shadow mt-2 mb-2 ml-2 mr-2
+                                w-40"
+								type="text"
+								value={set.time}
+								onChange={(e) =>
+									updateExerciseSet(exerciseIndex, setIndex, 'time', e.target.value)
+								}
+								placeholder="HH:MM:SS"
+							/>
+							<button
+								className="bg-gray-300 text-white font-bold rounded pl-2 pr-2 ml-2
+                                transition-colors duration-300 hover:bg-red-400 transition-colors"
+								onClick={() => removeExerciseSet(exerciseIndex, setIndex) }
+							>
+							-
+							</button>
+						</div>
+					))}
+
 
 				</div>
 			))}
 
-			<div className="mt-8">
+			{ isPopupOpen && (
+				<div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
+					<div className="bg-white p-6 rounded-lg shadow-lg">
+						<h3 className="text-lg font-semibold mb-4">Select Exercise Type</h3>
+						<div className="space-y-4">
+							<button
+								onClick={() => addExercise('weighted')}
+								className="px-4 py-2 bg-green-500 text-white rounded-md w-full"
+							>
+								Weighted
+							</button>
+							<button
+								onClick={() => addExercise('timed')}
+								className="px-4 py-2 bg-blue-500 text-white shadow rounded-md w-full"
+							>
+								Timed
+							</button>
+						</div>
+						<button
+							onClick={() => setIsPopupOpen(false)}
+							className="mt-4 text-sm text-gray-500 hover:underline"
+						>
+							Cancel
+						</button>
+					</div>
+				</div>
+			)}
+
+			<div className="grid grid-cols-3 justify-center items-center mt-8 mb-2">
 				<button
 					className="bg-blue-800 text-white font-bold py-1 px-2 rounded \
-				ml-1 mr-1"
-					onClick={addExercise}
+				ml-3 mr-1"
+					onClick={() => setIsPopupOpen(true)}
 				>
 					Add Exercise
 				</button>
@@ -170,7 +241,7 @@ const Workout = ({ workout, onSave, onDelete }) => {
 				</button>
 				<button
 					className="bg-blue-800 text-white font-bold py-1 px-2 rounded \
-				ml-1 mr-1"
+				ml-1 mr-3"
 					onClick={handleDelete}
 				>
 					Delete Workout
