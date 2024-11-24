@@ -5,6 +5,9 @@ const Workout = ({ workout, onSave, onDelete }) => {
     const [name, setName] = useState(workout.title)
     const [isNew, setIsNew] = useState(true)
 	const [isPopupOpen, setIsPopupOpen] = useState(false)
+	// This is starting to get ridiculous... I know.
+	const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false)
+	const [functionToExecute, setFunctionToExecute] = useState(null);
 
 
 	const addExercise = (type) => {
@@ -55,19 +58,27 @@ const Workout = ({ workout, onSave, onDelete }) => {
 	}
 
 	const removeExerciseSet = (exerciseIndex, setIndex) => {
-		// Copy old exercises
-		const newExercises = [...exercises]
-
-		newExercises[exerciseIndex].sets =
-			newExercises[exerciseIndex].sets.filter((_, i) => i !== setIndex)
-
-		setExercises(newExercises)
+		setFunctionToExecute(() => () => {
+			// Copy old exercises
+			const newExercises = [...exercises]
+			
+			newExercises[exerciseIndex].sets =
+				newExercises[exerciseIndex].sets.filter((_, i) => i !== setIndex)
+			
+			setExercises(newExercises)
+		})
+		
+		setIsConfirmPopupOpen(true)
 	}
 
 	const removeExercise = (exerciseIndex) => {
-		// Copy old exercises
-		const newExercises = exercises.filter((_, i) => i !== exerciseIndex)
-		setExercises(newExercises)
+		setFunctionToExecute(() => () => {
+			// Copy old exercises
+			const newExercises = exercises.filter((_, i) => i !== exerciseIndex)
+			setExercises(newExercises)
+		})
+		
+		setIsConfirmPopupOpen(true)
 	}
 
     const handleSave = () => {
@@ -77,6 +88,16 @@ const Workout = ({ workout, onSave, onDelete }) => {
     const handleDelete = () => {
         onDelete({ ...workout, title: name, exercises })
     }
+
+	const handleConfirm = () => {
+		// Execute the function if it was specified.. 
+		if (functionToExecute) {
+			functionToExecute()
+		}
+
+		setFunctionToExecute(null)
+		setIsConfirmPopupOpen(false)
+	}
 
     return (
         <div className="grid lg:col-span-2 lg:ml-4 border rounded shadow">
@@ -115,7 +136,7 @@ const Workout = ({ workout, onSave, onDelete }) => {
                             rounded-full w-6 h-6 transition-all duration-500
                             hover:bg-red-600 hover:w-28 hover:h-6 
                             hover:text-white hover:opacity-100"
-							onClick={() => removeExercise(exerciseIndex)}
+							onClick={ () => removeExercise(exerciseIndex) }
 						>
 							<div className="opacity-[01%] transition-opacity hover:opacity-100">
 								Delete 
@@ -151,7 +172,7 @@ const Workout = ({ workout, onSave, onDelete }) => {
 							<button
 								className="bg-gray-300 text-white font-bold rounded pl-2 pr-2 ml-2
                                 transition-colors duration-300 hover:bg-red-400 transition-colors"
-								onClick={() => removeExerciseSet(exerciseIndex, setIndex) }
+								onClick={ () => removeExerciseSet(exerciseIndex, setIndex) }
 							>
 							-
 							</button>
@@ -160,7 +181,7 @@ const Workout = ({ workout, onSave, onDelete }) => {
 					{ exercise.type === 'timed' && exercise.sets.map((set, setIndex) => (
 						<div key={setIndex} className="flex justify-center items-center">
 							<select
-								className="border rounded w-1/5 text-center shadow mt-2 mb-2 ml-2 mr-2
+								className="border rounded w-2/3 text-center shadow mt-2 mb-2 ml-2 mr-2
                                 w-[30%]"
 								value={set.intensity}
 								onChange={(e) =>
@@ -168,9 +189,9 @@ const Workout = ({ workout, onSave, onDelete }) => {
 								}
 								placeholder="Intensity"
 							>
-								<option value="Low">Low</option>
-								<option value="Medium">Medium</option>
-								<option value="High">High</option>
+								<option value="Low">Low Intensity</option>
+								<option value="Medium">Medium Intensity</option>
+								<option value="High">High Intensity</option>
 							</select>
 							<input
 								className="border rounded w-1/5 text-center shadow mt-2 mb-2 ml-2 mr-2
@@ -191,10 +212,9 @@ const Workout = ({ workout, onSave, onDelete }) => {
 							</button>
 						</div>
 					))}
-
-
 				</div>
 			))}
+
 
 			{ isPopupOpen && (
 				<div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 z-50">
@@ -220,6 +240,29 @@ const Workout = ({ workout, onSave, onDelete }) => {
 						>
 							Cancel
 						</button>
+					</div>
+				</div>
+			)}
+
+			{ isConfirmPopupOpen && (
+				<div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 z-50">
+					<div className="bg-white p-6 rounded-lg shadow-lg">
+						<h3 className="text-lg font-semibold mb-4">You sure?</h3>
+						<div className="space-y-4">
+							<button
+								onClick={ handleConfirm }
+								className="px-4 py-2 bg-gray-300 text-white rounded-md w-full
+transition-colors duration-300 hover:bg-green-400"
+							>
+								Yes
+							</button>
+							<button
+								onClick={() => setIsConfirmPopupOpen(false)}
+								className="px-4 py-2 bg-red-500 text-white shadow rounded-md w-full"
+							>
+								No
+							</button>
+						</div>
 					</div>
 				</div>
 			)}
