@@ -197,7 +197,7 @@ const Workout = ({ workout, onSave, onDelete }) => {
 			))}
 
 			{ isPopupOpen && (
-				<div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
+				<div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 z-50">
 					<div className="bg-white p-6 rounded-lg shadow-lg">
 						<h3 className="text-lg font-semibold mb-4">Select Exercise Type</h3>
 						<div className="space-y-4">
