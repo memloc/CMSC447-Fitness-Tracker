@@ -1,34 +1,42 @@
 import { useState } from 'react';
 import { Row, Col, Container, Form, Button, Spinner, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import './LoginPage.css'; 
+import './SignUpPage.css'; 
 
-const LoginPage = () => {
+const SignUpPage = () => {
     const [formData, setFormData] = useState({
         email: '',
-        password: '',  
+        password: '',
+        confirmPassword: '',
     });
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    
+    const [success, setSuccess] = useState('');
+
     const navigate = useNavigate();
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: value,
+            [e.target.name]: e.target.value,
         });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setSuccess('');
+
+        if (formData.password !== formData.confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:5050/login', {
+            const response = await fetch('http://localhost:5050/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -39,31 +47,34 @@ const LoginPage = () => {
                 }),
             });
 
-            if (!response.ok) {
-                const message = await response.text();
-                setError(message || 'Failed to login, please try again');
-                setLoading(false);
-                return;
+            if (response.ok) {
+                setSuccess("Account Created Successfully");
+                const user = { email: formData.email };
+                sessionStorage.setItem('user', JSON.stringify(user));
+                setTimeout(() => navigate('/'), 1000);
             }
 
-            const user = { email: formData.email };
-            sessionStorage.setItem('user', JSON.stringify(user));
-
-            navigate('/');
+            else {
+                const errorDate = await response.json();
+                setError(errorDate.message || 'Failed to register');
+            }
         } catch (err) {
-            console.error('Login Error:', err);
-            setError('Failed to login');
+            console.error('Registration Error:', err);
+            setError('Failed to register');
         } finally {
             setLoading(false);
-        }
+        }   
     }
 
     return (
         <Container className="login-container">
             <Row className="justify-content-md-center">
                 <Col md={6} className="login-form">
-                    <h1 className="text-center mb-4">Login</h1>
+                    <h1 className="text-center mb-4">Register</h1>
                     <Form noValidate onSubmit={handleSubmit}>
+                    {error && <Alert variant="danger">{error}</Alert>}
+                    {success && <Alert variant="success">{success}</Alert>}
+
                         <Form.Group className="mb-3" controlId="email">
                             <Form.Label>Email</Form.Label>
                             <Form.Control
@@ -88,13 +99,25 @@ const LoginPage = () => {
                             />
                         </Form.Group>
 
+                        <Form.Group className="mb-3" controlId="confirm-password">
+                            <Form.Label>Confirm Password</Form.Label>
+                            <Form.Control
+                                required
+                                type="password"
+                                placeholder="Confirm your password"
+                                name="confirmPassword"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                            />
+                        </Form.Group>
+
                         <Button variant="primary" type="submit" className="w-100 mt-3 mb-3" disabled={loading}>
-                            {loading ? <Spinner animation="border" size="sm" /> : "Login"}
+                            {loading ? <Spinner animation="border" size="sm" /> : 'Register'}
                         </Button>
 
                         <div className="text-center mt-4">
-                            Don't have an account?
-                            <Link to="/register" className="register-link"> Register</Link>
+                            Already have an account?
+                            <Link to="/login" className="register-link"> Sign In</Link>
                         </div>
                     </Form>
                 </Col>
@@ -103,4 +126,4 @@ const LoginPage = () => {
     )
 }
 
-export default LoginPage;
+export default SignUpPage;
