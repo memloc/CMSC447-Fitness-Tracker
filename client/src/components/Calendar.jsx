@@ -56,10 +56,12 @@ const MyCalendar = () => {
 			return
 		}
 
-       // const title = window.prompt('Enter a title for your workout:')
 
 		// For now just give blank titles for workouts and use the date instead
-		const title = "Default"
+		// HACK:  Gives e.g. "Mon Feb DD YYYY"
+		const title = Date(event.start).slice(0,15)
+
+		console.log(title)
 
         if (title) {
             const newWorkout = {
