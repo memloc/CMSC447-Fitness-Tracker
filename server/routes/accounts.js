@@ -1,6 +1,5 @@
 import express from 'express'
 import db from '../db/connection.js'
-import { ObjectId } from 'mongodb'
 import bcrypt from 'bcrypt'
 
 const router = express.Router()
@@ -25,8 +24,8 @@ router.post('/register', async (req, res) => {
         res.status(201).send({ message: 'Account created successfully', result })
 
     } catch (err) {
-        console.error('Registration Error:', err)
-        res.status(500).send('Error registering account.')
+        // console.error('Registration Error:', err)
+        res.status(500).send(`Error registering account: ${err}`)
     }
 })
 
@@ -42,8 +41,8 @@ router.post('/login', async (req, res) => {
         res.status(200).send({ message: 'Login successful', user })
 
     } catch (err) {
-        console.error('Login Error:', err)
-        res.status(500).send('Error logging in.')
+        // console.error('Login Error:', err)
+        res.status(500).send(`Error logging in: ${err}`)
     }
 })
 

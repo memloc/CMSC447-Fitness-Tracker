@@ -42,8 +42,8 @@ router.post('/', async (req, res) => {
         let result = await collection.insertOne(newDocument)
         res.send(result).status(204)
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Error adding workout calendar event.')
+        // console.error(err)
+        res.status(500).send(`Error adding workout calendar event: ${err}`)
     }
 })
 
@@ -65,8 +65,8 @@ router.patch('/:id', async (req, res) => {
         let result = await collection.updateOne(query, updates)
         res.send(result).status(200)
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Error updating workout calendar event.')
+        // console.error(err)
+        res.status(500).send(`Error updating workout calendar event: ${err}`)
     }
 })
 
@@ -79,8 +79,8 @@ router.delete('/:id', async (req, res) => {
 
         res.send(result).status(200)
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Error deleting workout calendar event.')
+        // console.error(err)
+        res.status(500).send(`Error deleting workout calendar event ${err}`)
     }
 })
 
