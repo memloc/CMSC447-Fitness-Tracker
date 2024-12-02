@@ -18,6 +18,13 @@ const MyCalendar = () => {
     // Fetches the WorkoutEvents from the database.
     useEffect(() => {
         async function getWorkoutEvents() {
+			if (!sessionStorage.getItem('user'))
+			{
+				console.error("User not logged in")
+				return
+			}
+
+
             const response = await fetch(
                 `http://localhost:5050/workout_events/`
             )
@@ -43,7 +50,13 @@ const MyCalendar = () => {
     /* handleEventCreateCancel() ... // Delete the blank workout from db */
 
     async function handleEventCreate({ start, end }) {
-        // const title = window.prompt('Enter a title for your workout:')
+ 		if (!sessionStorage.getItem('user'))
+		{
+			console.error("User not logged in")
+			return
+		}
+
+       // const title = window.prompt('Enter a title for your workout:')
 
 		// For now just give blank titles for workouts and use the date instead
 		const title = "Default"
@@ -75,6 +88,13 @@ const MyCalendar = () => {
             `${JSON.stringify(event)}`
         )
 
+		if (!sessionStorage.getItem('user'))
+		{
+			console.error("User not logged in")
+			return
+		}
+		
+
 
 		// This is the only thing that I've found fixes the issue with deselecting
 		// and reselecting workouts
@@ -95,6 +115,13 @@ const MyCalendar = () => {
     async function handleSaveWorkout(updatedWorkout) {
         // Get the updatedWorkout object id
         try {
+			if (!sessionStorage.getItem('user'))
+			{
+				console.error("User not logged in")
+				return
+			}
+
+
             let response
             if (updatedWorkout.isNew) {
                 /* TODO: Disable console.log in production builds */
