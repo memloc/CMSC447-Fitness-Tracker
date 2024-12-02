@@ -58,17 +58,13 @@ const Workout = ({ workout, onSave, onDelete }) => {
 	}
 
 	const removeExerciseSet = (exerciseIndex, setIndex) => {
-		setFunctionToExecute(() => () => {
-			// Copy old exercises
-			const newExercises = [...exercises]
-			
-			newExercises[exerciseIndex].sets =
-				newExercises[exerciseIndex].sets.filter((_, i) => i !== setIndex)
-			
-			setExercises(newExercises)
-		})
+		// Copy old exercises
+		const newExercises = [...exercises]
 		
-		setIsConfirmPopupOpen(true)
+		newExercises[exerciseIndex].sets =
+			newExercises[exerciseIndex].sets.filter((_, i) => i !== setIndex)
+		
+		setExercises(newExercises)
 	}
 
 	const removeExercise = (exerciseIndex) => {
@@ -86,7 +82,11 @@ const Workout = ({ workout, onSave, onDelete }) => {
     }
 
     const handleDelete = () => {
-        onDelete({ ...workout, title: name, exercises })
+		setFunctionToExecute(() => () => {
+			onDelete({ ...workout, title: name, exercises })
+		})
+		
+		setIsConfirmPopupOpen(true)
     }
 
 	const handleConfirm = () => {
@@ -247,7 +247,7 @@ const Workout = ({ workout, onSave, onDelete }) => {
 			{ isConfirmPopupOpen && (
 				<div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 z-50">
 					<div className="bg-white p-6 rounded-lg shadow-lg">
-						<h3 className="text-lg font-semibold mb-4">You sure?</h3>
+						<h3 className="text-lg font-semibold mb-4">Are you sure?</h3>
 						<div className="space-y-4">
 							<button
 								onClick={ handleConfirm }
@@ -258,7 +258,7 @@ transition-colors duration-300 hover:bg-green-400"
 							</button>
 							<button
 								onClick={() => setIsConfirmPopupOpen(false)}
-								className="px-4 py-2 bg-red-500 text-white shadow rounded-md w-full"
+								className="px-4 py-2 bg-red-400 text-white shadow rounded-md w-full"
 							>
 								No
 							</button>
