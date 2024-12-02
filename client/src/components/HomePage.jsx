@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import './HomePage.css';
 import Header from './Header';
-import fitnessTrackerImage from './fitness_tracker.png';
+import ImgRunner from './ImgRunner.avif'
 
 const HomePage = () => {
     return (
@@ -21,7 +21,8 @@ const HomePage = () => {
                     </Col>
                     <Col md={6} className="image-section">
                         <img 
-                            src={fitnessTrackerImage}
+						/* Unisplash Licensed Photo from: https://unsplash.com/photos/running-man-on-bridge-uq2E2V4LhCY */
+                        src={ImgRunner}
                             alt="Fitness Tracker" 
                         />
                     </Col>
