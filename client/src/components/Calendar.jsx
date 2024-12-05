@@ -23,17 +23,20 @@ const MyCalendar = () => {
 				console.error("User not logged in")
 				return
 			}
+			const userId = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).userId : null;
 
-
+			console.log(`http://localhost:5050/workout_events?userId=${userId}`)
             const response = await fetch(
-                `http://localhost:5050/workout_events/`
+                `http://localhost:5050/workout_events?userId=${userId}`,
             )
+
             if (!response.ok) {
                 const message = `An error occurred: ${response.statusText}`
                 console.error(message)
                 return
             }
             const workouts = await response.json()
+			console.log(workouts)
 
             /* TODO: Remove console.log for production builds */
             for (const workout of workouts) {
@@ -63,14 +66,17 @@ const MyCalendar = () => {
 
 		console.log(title)
 
+		const userId = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).userId : null;
+
         if (title) {
             const newWorkout = {
                 id: events.length,
+				userId: userId,
                 isNew: 1,
                 start,
                 end,
                 title,
-                sets: [],
+				exercises: []
             }
 
             // Must also post the blank workout being created to the DB
@@ -138,6 +144,9 @@ const MyCalendar = () => {
                 updatedWorkout.isNew = false
 
                 // Workout is new so POST the workout to /workout_events
+				const userId = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).userId : null;
+				updatedWorkout.userId = userId
+
                 response = await fetch(`http://localhost:5050/workout_events`, {
                     method: 'POST',
                     headers: {
@@ -155,6 +164,10 @@ const MyCalendar = () => {
                 )
 
                 // Update is not new so PATCH the workout_event of id
+				const userId = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).userId : null;
+
+				updatedWorkout.userId = userId;
+
                 response = await fetch(
                     `http://localhost:5050/workout_events/${updatedWorkout._id}`,
                     {
@@ -196,8 +209,9 @@ const MyCalendar = () => {
                 `${JSON.stringify(workout)}`
             )
 
+			const userId = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).userId : null;
             const response = await fetch(
-                `http://localhost:5050/workout_events/${workout._id}`,
+                `http://localhost:5050/workout_events/${workout._id}?userId=${userId}`,
                 {
                     method: 'DELETE',
                 }

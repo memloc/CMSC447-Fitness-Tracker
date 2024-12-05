@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Row, Col, Container, Form, Button, Spinner, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import sha256 from 'crypto-js/sha256.js'
 import './LoginPage.css'; 
 
 const LoginPage = () => {
@@ -46,9 +47,12 @@ const LoginPage = () => {
                 return;
             }
 
-            const user = { email: formData.email };
-            sessionStorage.setItem('user', JSON.stringify(user));
+			// TODO: Research better approach for this.. collision would not be good
+			// Give users a unique id for to use as key for user account data
+			const userId = sha256(formData.email).toString()
+            const user = { email: formData.email, userId: userId };
 
+            sessionStorage.setItem('user', JSON.stringify(user));
             navigate('/');
         } catch (err) {
             console.error('Login Error:', err);

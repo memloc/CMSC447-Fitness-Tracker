@@ -1,6 +1,7 @@
 import express from 'express'
 import db from '../db/connection.js'
 import bcrypt from 'bcrypt'
+import sha256 from 'crypto-js/sha256.js'
 
 const router = express.Router()
 
@@ -14,7 +15,13 @@ router.post('/register', async (req, res) => {
         if (existingUser) return res.status(400).send('Account with this email already exists')
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
+
+		// TODO: Research better approach for this.. collision would not be good
+		// Give users a unique id for to use as key for user account data
+		const userId = sha256(req.body.email).toString()
+
         let newDocument = {
+			userId: userId,
             email: req.body.email,
             password: hashedPassword
         }

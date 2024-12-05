@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Row, Col, Container, Form, Button, Spinner, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import sha256 from 'crypto-js/sha256.js'
 import './SignUpPage.css'; 
 
 const SignUpPage = () => {
@@ -49,7 +50,11 @@ const SignUpPage = () => {
 
             if (response.ok) {
                 setSuccess("Account Created Successfully");
-                const user = { email: formData.email };
+
+				// TODO: Research better approach for this.. 
+				const userId = sha256(formData.email).toString()
+                const user = { email: formData.email, userId: userId };
+
                 sessionStorage.setItem('user', JSON.stringify(user));
                 setTimeout(() => navigate('/'), 1000);
             }
