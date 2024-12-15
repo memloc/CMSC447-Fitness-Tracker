@@ -62,7 +62,7 @@ const MyCalendar = () => {
 
 		// For now just give blank titles for workouts and use the date instead
 		// HACK:  Gives e.g. "Mon Feb DD YYYY"
-		const title = Date(start).slice(0,15)
+		const title = `${start}`.slice(0,15)
 
 		console.log(title)
 
